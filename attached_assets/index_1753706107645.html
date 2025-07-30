@@ -1,0 +1,2388 @@
+﻿
+<!doctype html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, user-scalable=no"
+        />
+        <title>Киношлеп Кликер - Империя Кино</title>
+        <style>
+            @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&display=swap");
+
+            :root {
+                --primary-purple: #6a0dad;
+                --secondary-purple: #a259ff;
+                --dark-purple: #4b0082;
+                --gold-color: #ffde59;
+                --success-green: #00d4aa;
+                --danger-red: #ff4757;
+                --warning-orange: #ffa726;
+                --text-light: #ffffff;
+                --text-dark: #2c3e50;
+                --background-overlay: rgba(42, 0, 82, 0.85);
+            }
+
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
+            body,
+            html {
+                height: 100%;
+                font-family: "Montserrat", sans-serif;
+                background: linear-gradient(
+                    135deg,
+                    var(--primary-purple),
+                    var(--secondary-purple),
+                    var(--dark-purple)
+                );
+                background-size: 400% 400%;
+                animation: gradientShift 15s ease infinite;
+                overflow-x: hidden;
+                color: var(--text-light);
+                user-select: none;
+            }
+
+            body::before {
+                content: "";
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                pointer-events: none;
+                background-image: radial-gradient(
+                        rgba(255, 255, 255, 0.05) 15%,
+                        transparent 16%
+                    ),
+                    radial-gradient(
+                        rgba(255, 255, 255, 0.05) 15%,
+                        transparent 16%
+                    );
+                background-position:
+                    0 0,
+                    30px 30px;
+                background-size: 60px 60px;
+                z-index: 0;
+            }
+
+            @keyframes gradientShift {
+                0% {
+                    background-position: 0% 50%;
+                }
+                50% {
+                    background-position: 100% 50%;
+                }
+                100% {
+                    background-position: 0% 50%;
+                }
+            }
+
+            .container {
+                max-width: min(500px, 100vw);
+                width: 95vw;
+                margin: 0 auto;
+                padding: 20px 10px 120px;
+                position: relative;
+                z-index: 1;
+            }
+
+            .header {
+                text-align: center;
+                margin-bottom: 20px;
+            }
+
+            .title {
+                font-size: clamp(24px, 6vw, 28px);
+                font-weight: 900;
+                text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+                margin-bottom: 10px;
+            }
+
+            .money-display {
+                font-size: clamp(20px, 5vw, 24px);
+                font-weight: 700;
+                text-shadow: 0 0 4px rgba(0, 0, 0, 0.6);
+                margin-bottom: 10px;
+            }
+
+            .passive-income-display {
+                font-size: clamp(14px, 3.5vw, 16px);
+                font-weight: 600;
+                color: var(--success-green);
+                margin-bottom: 10px;
+                text-align: center;
+            }
+
+            .click-button {
+                width: min(180px, 40vw);
+                height: min(180px, 40vw);
+                background: radial-gradient(
+                    circle at center,
+                    var(--gold-color),
+                    #c7a800
+                );
+                border-radius: 50%;
+                border: 4px solid #f1c40f;
+                box-shadow:
+                    0 0 20px 6px rgba(255, 222, 89, 0.4),
+                    inset 0 8px 15px rgba(255, 245, 165, 0.6),
+                    inset 0 -8px 15px rgba(199, 168, 0, 0.8);
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 900;
+                font-size: clamp(16px, 4vw, 20px);
+                color: #4b2e00;
+                text-shadow:
+                    1px 1px 0 #fff8b0,
+                    2px 2px 5px #6f4e00;
+                transition:
+                    transform 0.1s ease,
+                    box-shadow 0.15s ease;
+                margin: 0 auto 30px;
+                position: relative;
+                z-index: 2;
+            }
+
+            .click-button:active {
+                transform: scale(0.9);
+                box-shadow:
+                    0 0 25px 10px rgba(255, 216, 0, 0.6),
+                    inset 0 6px 12px rgba(255, 248, 176, 0.3),
+                    inset 0 -6px 12px rgba(179, 146, 0, 0.2);
+            }
+
+            .click-effect {
+                position: absolute;
+                pointer-events: none;
+                font-size: 20px;
+                font-weight: 700;
+                color: var(--gold-color);
+                text-shadow: 0 0 10px rgba(255, 222, 89, 0.8);
+                animation: floatUp 1s ease-out forwards;
+                z-index: 10;
+            }
+
+            @keyframes floatUp {
+                0% {
+                    opacity: 1;
+                    transform: scale(1);
+                }
+                100% {
+                    opacity: 0;
+                    transform: translateY(-150px) scale(1.2);
+                }
+            }
+
+            /* Bubbles Styles */
+            .bubble {
+                position: fixed;
+                width: 60px;
+                height: 60px;
+                background: radial-gradient(
+                    circle at 30% 30%,
+                    rgba(255, 255, 255, 0.8),
+                    rgba(0, 150, 255, 0.6),
+                    rgba(0, 100, 200, 0.8)
+                );
+                border-radius: 50%;
+                cursor: pointer;
+                z-index: 1000;
+                animation: bubbleFloat 12s linear infinite;
+                box-shadow:
+                    inset 0 0 20px rgba(255, 255, 255, 0.3),
+                    0 0 20px rgba(0, 150, 255, 0.4);
+                border: 2px solid rgba(255, 255, 255, 0.2);
+            }
+
+            .bubble::before {
+                content: "";
+                position: absolute;
+                top: 15%;
+                left: 20%;
+                width: 20px;
+                height: 20px;
+                background: rgba(255, 255, 255, 0.6);
+                border-radius: 50%;
+                filter: blur(2px);
+            }
+
+            @keyframes bubbleFloat {
+                0% {
+                    transform: translateY(100vh) translateX(0) rotate(0deg);
+                    opacity: 0;
+                }
+                10% {
+                    opacity: 1;
+                }
+                90% {
+                    opacity: 1;
+                }
+                100% {
+                    transform: translateY(-120vh) translateX(50px)
+                        rotate(360deg);
+                    opacity: 0;
+                }
+            }
+
+            .bubble-pop {
+                animation: bubblePop 0.3s ease-out forwards !important;
+            }
+
+            @keyframes bubblePop {
+                0% {
+                    transform: scale(1);
+                    opacity: 1;
+                }
+                50% {
+                    transform: scale(1.5);
+                    opacity: 0.7;
+                }
+                100% {
+                    transform: scale(0);
+                    opacity: 0;
+                }
+            }
+
+            .discount-effect {
+                position: fixed;
+                font-size: 24px;
+                font-weight: 900;
+                color: #ff4757;
+                text-shadow: 0 0 10px rgba(255, 71, 87, 0.8);
+                animation: discountFloat 2s ease-out forwards;
+                z-index: 1001;
+                pointer-events: none;
+            }
+
+            @keyframes discountFloat {
+                0% {
+                    opacity: 1;
+                    transform: scale(1);
+                }
+                100% {
+                    opacity: 0;
+                    transform: translateY(-100px) scale(1.5);
+                }
+            }
+
+            .tabs {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                grid-template-rows: repeat(3, 1fr);
+                gap: 8px;
+                margin-bottom: 20px;
+                background: var(--background-overlay);
+                border-radius: 12px;
+                padding: 12px;
+                backdrop-filter: blur(15px);
+                max-width: 600px;
+                margin-left: auto;
+                margin-right: auto;
+                margin-bottom: 20px;
+            }
+
+            .tab {
+                padding: 15px 12px;
+                text-align: center;
+                font-weight: 600;
+                cursor: pointer;
+                border-radius: 8px;
+                transition: all 0.3s ease;
+                font-size: clamp(12px, 3vw, 14px);
+                background: rgba(255, 255, 255, 0.1);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                min-height: 60px;
+            }
+
+            .tab.active {
+                background: var(--secondary-purple);
+                box-shadow: 0 2px 8px rgba(162, 89, 255, 0.4);
+            }
+
+            .tab:hover:not(.active) {
+                background: rgba(255, 255, 255, 0.2);
+            }
+
+            .tab-icon {
+                font-size: clamp(16px, 4vw, 18px);
+                margin-bottom: 4px;
+            }
+
+            .tab-text {
+                font-size: clamp(10px, 2.5vw, 12px);
+                line-height: 1.2;
+            }
+
+            .tab-content {
+                display: none;
+            }
+
+            .tab-content.active {
+                display: block;
+            }
+
+            .section {
+                background: var(--background-overlay);
+                border-radius: 12px;
+                padding: 15px;
+                margin-bottom: 15px;
+                backdrop-filter: blur(15px);
+            }
+
+            .section-title {
+                font-size: clamp(16px, 4vw, 18px);
+                font-weight: 700;
+                margin-bottom: 15px;
+                text-align: center;
+            }
+
+            /* Upgrade Styles */
+            .film-section {
+                text-align: center;
+            }
+
+            .film-button {
+                width: 100%;
+                padding: 15px;
+                font-size: clamp(16px, 4vw, 18px);
+                font-weight: 700;
+                background: linear-gradient(
+                    45deg,
+                    var(--primary-purple),
+                    var(--secondary-purple)
+                );
+                border: none;
+                border-radius: 10px;
+                color: var(--text-light);
+                cursor: pointer;
+                box-shadow: 0 4px 15px rgba(162, 89, 255, 0.4);
+                transition: all 0.3s ease;
+                margin-bottom: 10px;
+            }
+
+            .film-button:disabled {
+                background: rgba(122, 86, 185, 0.4);
+                cursor: not-allowed;
+                box-shadow: none;
+            }
+
+            .film-button:hover:not(:disabled) {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(162, 89, 255, 0.6);
+            }
+
+            .film-cost {
+                font-size: clamp(14px, 3.5vw, 16px);
+                font-weight: 600;
+                color: rgba(240, 233, 255, 0.8);
+                margin-bottom: 15px;
+            }
+
+            .upgrades-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+                gap: 10px;
+            }
+
+            .upgrade-card {
+                background: rgba(90, 14, 160, 0.7);
+                border-radius: 10px;
+                padding: 12px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                border: 2px solid transparent;
+            }
+
+            .upgrade-card:hover:not(.disabled) {
+                background: rgba(124, 66, 255, 0.9);
+                border-color: var(--secondary-purple);
+                transform: translateY(-2px);
+            }
+
+            .upgrade-card.disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+
+            .upgrade-name {
+                font-weight: 700;
+                font-size: clamp(12px, 3vw, 14px);
+                margin-bottom: 5px;
+            }
+
+            .upgrade-level {
+                font-size: clamp(10px, 2.5vw, 12px);
+                color: rgba(208, 198, 255, 0.8);
+                margin-bottom: 5px;
+            }
+
+            .upgrade-price {
+                font-size: clamp(11px, 3vw, 13px);
+                font-weight: 600;
+                color: var(--gold-color);
+            }
+
+            .upgrade-effect {
+                font-size: clamp(9px, 2.5vw, 11px);
+                color: rgba(255, 255, 255, 0.7);
+                margin-top: 3px;
+            }
+
+            /* Manager Styles */
+            .manager-section {
+                background: rgba(0, 212, 170, 0.1);
+                border: 2px solid var(--success-green);
+                border-radius: 12px;
+                padding: 15px;
+                margin-bottom: 15px;
+            }
+
+            .manager-title {
+                font-size: clamp(14px, 3.5vw, 16px);
+                font-weight: 700;
+                color: var(--success-green);
+                margin-bottom: 15px;
+                text-align: center;
+            }
+
+            .managers-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+                gap: 10px;
+            }
+
+            .manager-card {
+                background: rgba(0, 212, 170, 0.2);
+                border-radius: 10px;
+                padding: 12px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                border: 2px solid transparent;
+                text-align: center;
+            }
+
+            .manager-card:hover:not(.disabled) {
+                background: rgba(0, 212, 170, 0.3);
+                border-color: var(--success-green);
+                transform: translateY(-2px);
+            }
+
+            .manager-card.disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+
+            .manager-name {
+                font-weight: 700;
+                font-size: clamp(12px, 3vw, 14px);
+                margin-bottom: 5px;
+                color: var(--success-green);
+            }
+
+            .manager-level {
+                font-size: clamp(10px, 2.5vw, 12px);
+                color: rgba(0, 212, 170, 0.8);
+                margin-bottom: 5px;
+            }
+
+            .manager-price {
+                font-size: clamp(11px, 3vw, 13px);
+                font-weight: 600;
+                color: var(--gold-color);
+                margin-bottom: 5px;
+            }
+
+            .manager-effect {
+                font-size: clamp(9px, 2.5vw, 11px);
+                color: rgba(255, 255, 255, 0.7);
+                margin-top: 3px;
+            }
+
+            /* Stats Styles */
+            .stats-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+                gap: 15px;
+            }
+
+            .stat-card {
+                background: rgba(255, 255, 255, 0.15);
+                padding: 15px;
+                border-radius: 10px;
+                text-align: center;
+                backdrop-filter: blur(10px);
+            }
+
+            .stat-value {
+                font-size: clamp(16px, 4vw, 20px);
+                font-weight: 700;
+                color: var(--gold-color);
+                margin-bottom: 5px;
+            }
+
+            .stat-label {
+                font-size: clamp(10px, 2.5vw, 12px);
+                color: rgba(255, 255, 255, 0.8);
+            }
+
+            .promo-section {
+                background: rgba(255, 215, 0, 0.1);
+                border: 2px solid var(--gold-color);
+                border-radius: 12px;
+                padding: 15px;
+                margin-bottom: 15px;
+                text-align: center;
+            }
+
+            .promo-title {
+                font-size: 16px;
+                font-weight: 700;
+                color: var(--gold-color);
+                margin-bottom: 10px;
+            }
+
+            .promo-code {
+                font-size: clamp(16px, 4vw, 20px);
+                font-weight: 900;
+                color: var(--gold-color);
+                background: rgba(255, 215, 0, 0.1);
+                padding: 10px;
+                border-radius: 8px;
+                border: 1px solid var(--gold-color);
+                word-break: break-all;
+            }
+
+            /* Filmography Styles */
+            .filmography {
+                max-height: 250px;
+                overflow-y: auto;
+            }
+
+            .film-item {
+                padding: 8px 0;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .film-item:last-child {
+                border-bottom: none;
+            }
+
+            .film-name {
+                font-weight: 600;
+                font-size: clamp(12px, 3vw, 14px);
+            }
+
+            .film-result {
+                font-size: clamp(12px, 3vw, 14px);
+                font-weight: 700;
+            }
+
+            .film-result.profit {
+                color: var(--success-green);
+            }
+
+            .film-result.loss {
+                color: var(--danger-red);
+            }
+
+            /* Leaderboard Styles */
+            .leaderboard {
+                max-height: 280px;
+                overflow-y: auto;
+            }
+
+            .leaderboard-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px;
+                margin-bottom: 8px;
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 8px;
+            }
+
+            .leaderboard-rank {
+                font-weight: 900;
+                font-size: clamp(16px, 4vw, 18px);
+                width: 30px;
+                text-align: center;
+            }
+
+            .leaderboard-rank.first {
+                color: #ffd700;
+            }
+            .leaderboard-rank.second {
+                color: #c0c0c0;
+            }
+            .leaderboard-rank.third {
+                color: #cd7f32;
+            }
+
+            .leaderboard-name {
+                flex: 1;
+                margin-left: 15px;
+                font-weight: 600;
+                font-size: clamp(12px, 3vw, 14px);
+            }
+
+            .leaderboard-score {
+                font-weight: 700;
+                color: var(--gold-color);
+                font-size: clamp(12px, 3vw, 14px);
+            }
+
+            /* Rules Styles */
+            .rules-section {
+                background: rgba(255, 215, 0, 0.1);
+                border: 2px solid var(--gold-color);
+                border-radius: 12px;
+                padding: 15px;
+                margin-bottom: 15px;
+            }
+
+            .rules-title {
+                font-size: clamp(14px, 3.5vw, 16px);
+                font-weight: 700;
+                color: var(--gold-color);
+                margin-bottom: 10px;
+                text-align: center;
+            }
+
+            .rules-list {
+                font-size: clamp(11px, 3vw, 13px);
+                line-height: 1.5;
+            }
+
+            .rules-list li {
+                margin-bottom: 5px;
+                padding-left: 5px;
+            }
+
+            /* Countdown Styles */
+            .countdown-timer {
+                font-size: clamp(20px, 5vw, 24px);
+                font-weight: 900;
+                color: var(--gold-color);
+                text-align: center;
+                margin: 20px 0;
+                padding: 20px;
+                background: rgba(255, 215, 0, 0.1);
+                border: 2px solid var(--gold-color);
+                border-radius: 12px;
+            }
+
+            .timer-label {
+                font-size: clamp(12px, 3vw, 14px);
+                margin-bottom: 10px;
+                color: rgba(255, 255, 255, 0.8);
+            }
+
+            .subscribe-text {
+                font-size: clamp(16px, 4vw, 18px);
+                font-weight: 600;
+                margin: 20px 0;
+                color: var(--gold-color);
+                text-align: center;
+            }
+
+            .subscribe-button {
+                display: block;
+                margin: 0 auto;
+            }
+
+            /* Bottom Buttons */
+            .bottom-buttons {
+                display: flex;
+                gap: 15px;
+                justify-content: center;
+                margin: 20px 0;
+                position: fixed;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                z-index: 100;
+            }
+
+            .bottom-button {
+                width: clamp(60px, 15vw, 80px);
+                height: clamp(60px, 15vw, 80px);
+                border: 3px solid var(--secondary-purple);
+                border-radius: 12px;
+                background: var(--background-overlay);
+                backdrop-filter: blur(15px);
+                cursor: pointer;
+                transition: all 0.3s ease;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                text-decoration: none;
+                color: var(--text-light);
+                position: relative;
+                overflow: hidden;
+            }
+
+            .bottom-button:active {
+                transform: scale(0.95);
+                box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.3);
+            }
+
+            .bottom-button::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: linear-gradient(
+                    45deg,
+                    transparent,
+                    rgba(255, 255, 255, 0.1),
+                    transparent
+                );
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .bottom-button:hover::before {
+                transform: translateX(100%);
+            }
+
+            .bottom-button-icon {
+                font-size: clamp(18px, 5vw, 24px);
+                margin-bottom: 5px;
+            }
+
+            .bottom-button-text {
+                font-size: clamp(8px, 2vw, 10px);
+                font-weight: 600;
+                text-transform: uppercase;
+            }
+
+            /* Modal Styles */
+            .modal {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                backdrop-filter: blur(10px);
+                z-index: 2000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
+            }
+
+            .modal.show {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            .modal-content {
+                background: var(--background-overlay);
+                border-radius: 15px;
+                padding: 30px;
+                max-width: 500px;
+                width: 90%;
+                text-align: center;
+                animation: slideUp 0.5s ease-out;
+                backdrop-filter: blur(15px);
+                border: 2px solid var(--secondary-purple);
+            }
+
+            @keyframes slideUp {
+                from {
+                    transform: translateY(50px);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateY(0);
+                    opacity: 1;
+                }
+            }
+
+            .modal-title {
+                font-size: clamp(24px, 6vw, 28px);
+                font-weight: 900;
+                margin-bottom: 20px;
+                color: var(--gold-color);
+                text-shadow: 0 0 10px rgba(255, 222, 89, 0.5);
+            }
+
+            .modal-input {
+                width: 100%;
+                padding: 15px;
+                margin-bottom: 15px;
+                border: 2px solid var(--secondary-purple);
+                border-radius: 10px;
+                background: rgba(255, 255, 255, 0.1);
+                color: var(--text-light);
+                font-size: 16px;
+                font-family: "Montserrat", sans-serif;
+            }
+
+            .modal-input::placeholder {
+                color: rgba(255, 255, 255, 0.6);
+            }
+
+            .modal-button {
+                background: linear-gradient(
+                    45deg,
+                    var(--primary-purple),
+                    var(--secondary-purple)
+                );
+                border: none;
+                padding: 15px 30px;
+                border-radius: 25px;
+                color: white;
+                font-weight: 700;
+                font-size: 16px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 15px rgba(162, 89, 255, 0.4);
+                margin: 5px;
+                display: inline-block;
+                text-decoration: none;
+            }
+
+            .modal-button:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(162, 89, 255, 0.6);
+            }
+
+            .highlighted-text {
+                color: var(--gold-color);
+                font-weight: 900;
+                text-shadow: 0 0 5px rgba(255, 222, 89, 0.5);
+            }
+
+            /* Film Result Modal Styles */
+            .film-result-modal .modal-content {
+                max-width: 400px;
+            }
+
+            .film-title {
+                font-size: clamp(18px, 4vw, 22px);
+                font-weight: 700;
+                margin-bottom: 15px;
+                color: var(--text-light);
+            }
+
+            .film-budget {
+                font-size: clamp(20px, 5vw, 24px);
+                font-weight: 900;
+                margin: 20px 0;
+                text-shadow: 0 0 10px rgba(255, 222, 89, 0.5);
+            }
+
+            .film-budget.profit {
+                color: var(--success-green);
+            }
+
+            .film-budget.loss {
+                color: var(--danger-red);
+            }
+
+            .film-explanation {
+                font-size: clamp(14px, 3vw, 16px);
+                margin: 15px 0;
+                line-height: 1.4;
+                color: rgba(255, 255, 255, 0.9);
+            }
+
+            /* Telegram/VK optimization */
+            @media (max-height: 600px) {
+                .container {
+                    padding-bottom: 80px;
+                }
+
+                .click-button {
+                    width: min(120px, 30vw);
+                    height: min(120px, 30vw);
+                    margin-bottom: 20px;
+                }
+
+                .tabs {
+                    gap: 3px;
+                    padding: 4px;
+                }
+
+                .tab {
+                    padding: 6px 3px;
+                    min-height: 40px;
+                }
+            }
+
+            /* Mobile Responsive */
+            @media (max-width: 768px) {
+                .container {
+                    padding: 10px 5px 120px;
+                }
+
+                .tabs {
+                    grid-template-columns: repeat(3, 1fr);
+                    grid-template-rows: repeat(3, 1fr);
+                    gap: 6px;
+                    padding: 8px;
+                }
+
+                .tab {
+                    padding: 10px 8px;
+                    min-height: 50px;
+                }
+
+                .bottom-buttons {
+                    bottom: 10px;
+                    gap: 10px;
+                }
+            }
+
+            @media (max-width: 480px) {
+                .container {
+                    padding: 5px 2px 100px;
+                }
+
+                .click-button {
+                    width: min(150px, 35vw);
+                    height: min(150px, 35vw);
+                }
+
+                .tabs {
+                    gap: 4px;
+                    padding: 6px;
+                }
+
+                .tab {
+                    padding: 8px 4px;
+                    min-height: 45px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <div class="title">🎬 КИНОШЛЕП</div>
+                <div class="money-display" id="moneyDisplay">Бюджет: 0 К</div>
+                <div
+                    class="passive-income-display"
+                    id="passiveIncomeDisplay"
+                    style="display: none"
+                >
+                    Пассивный доход: +0 К/сек
+                </div>
+            </div>
+
+            <button class="click-button" id="clickButton">КИНОШЛЕП</button>
+
+            <!-- Desktop Tabs -->
+            <div class="tabs">
+                <div class="tab active" data-tab="game">
+                    <div class="tab-icon">🎮</div>
+                    <div class="tab-text">Игра</div>
+                </div>
+                <div class="tab" data-tab="upgrades">
+                    <div class="tab-icon">⚡</div>
+                    <div class="tab-text">Улучшения</div>
+                </div>
+                <div class="tab" data-tab="managers">
+                    <div class="tab-icon">👔</div>
+                    <div class="tab-text">Менеджеры</div>
+                </div>
+                <div class="tab" data-tab="stats">
+                    <div class="tab-icon">📊</div>
+                    <div class="tab-text">Статистика</div>
+                </div>
+                <div class="tab" data-tab="leaderboard">
+                    <div class="tab-icon">🏆</div>
+                    <div class="tab-text">Рейтинг</div>
+                </div>
+                <div class="tab" data-tab="filmography">
+                    <div class="tab-icon">🎥</div>
+                    <div class="tab-text">Фильмография</div>
+                </div>
+                <div class="tab" data-tab="giveaway">
+                    <div class="tab-icon">🎁</div>
+                    <div class="tab-text">Еженедельный розыгрыш</div>
+                </div>
+                <div class="tab" data-tab="rules">
+                    <div class="tab-icon">📖</div>
+                    <div class="tab-text">Правила</div>
+                </div>
+            </div>
+
+            <!-- Game Tab -->
+            <div class="tab-content active" id="gameTab">
+                <div class="section film-section">
+                    <div class="section-title">🎬 Производство фильмов</div>
+                    <button class="film-button" id="filmButton">
+                        Снять фильм
+                    </button>
+                    <div class="film-cost" id="filmCost">
+                        Стоимость: 1 000 000 К
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upgrades Tab -->
+            <div class="tab-content" id="upgradesTab">
+                <div class="section">
+                    <div class="section-title">⚡ Улучшения оборудования</div>
+                    <div class="upgrades-grid" id="upgradesGrid"></div>
+                </div>
+            </div>
+
+            <!-- Managers Tab -->
+            <div class="tab-content" id="managersTab">
+                <div class="section">
+                    <div class="section-title">👔 Менеджеры</div>
+                    <div class="managers-grid" id="managersGrid"></div>
+                </div>
+            </div>
+
+            <!-- Stats Tab -->
+            <div class="tab-content" id="statsTab">
+                <div class="section">
+                    <div class="section-title">📊 Статистика</div>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value" id="clickPowerStat">
+                                1500
+                            </div>
+                            <div class="stat-label">За клик</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="filmsCountStat">0</div>
+                            <div class="stat-label">Фильмов снято</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="totalClicksStat">0</div>
+                            <div class="stat-label">Всего кликов</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="totalEarnedStat">
+                                0 К
+                            </div>
+                            <div class="stat-label">Всего заработано</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="promo-section"
+                    id="promoSection"
+                    style="display: none"
+                >
+                    <div class="promo-title">🎁 Твой промокод</div>
+                    <div class="promo-code" id="promoCode">
+                        Пока нет промокода
+                    </div>
+                </div>
+            </div>
+
+            <!-- Leaderboard Tab -->
+            <div class="tab-content" id="leaderboardTab">
+                <div class="section">
+                    <div class="section-title">🏆 Топ 5 игроков</div>
+                    <div class="leaderboard" id="leaderboard">
+                        <div
+                            style="
+                                text-align: center;
+                                padding: 20px;
+                                color: rgba(255, 255, 255, 0.6);
+                            "
+                        >
+                            Загрузка рейтинга...
+                        </div>
+                    </div>
+                    <div style="text-align: center; margin-top: 15px; font-size: clamp(10px, 2.5vw, 12px); color: rgba(255, 255, 255, 0.6);">
+                        Обновляется каждый день в 12:00
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filmography Tab -->
+            <div class="tab-content" id="filmographyTab">
+                <div class="section">
+                    <div class="section-title">🎥 Фильмография</div>
+                    <div class="filmography" id="filmography">
+                        <div
+                            style="
+                                text-align: center;
+                                color: rgba(255, 255, 255, 0.6);
+                                padding: 20px;
+                            "
+                        >
+                            Пока не снято ни одного фильма
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Giveaway Tab -->
+            <div class="tab-content" id="giveawayTab">
+                <div class="section">
+                    <div class="section-title">🎁 Еженедельный розыгрыш</div>
+                    <div class="countdown-timer">
+                        <div class="timer-label">До следующего розыгрыша:</div>
+                        <div id="countdownDisplay">Загрузка...</div>
+                    </div>
+                    <div class="subscribe-text">
+                        Чтобы участвовать подпишись
+                    </div>
+                    <a
+                        href="https://t.me/center_kino"
+                        target="_blank"
+                        class="modal-button subscribe-button"
+                    >
+                        Подписаться
+                    </a>
+                </div>
+            </div>
+
+            <!-- Rules Tab -->
+            <div class="tab-content" id="rulesTab">
+                <div class="section">
+                    <div class="section-title">📖 Правила игры</div>
+                    <div class="rules-section">
+                        <div class="rules-title">🎯 Цель игры</div>
+                        <ul class="rules-list">
+                            <li>
+                                💰 Накапливай бюджет, чтобы попасть в топ
+                                игроков
+                            </li>
+                            <li>
+                                🎬 Создавай киноимперию и становись
+                                кинотерминатором
+                            </li>
+                            <li>
+                                🏆 Соревнуйся с другими игроками за лидерство
+                            </li>
+                            <li>🎈 Лопай пузырьки для получения промокодов</li>
+                            <li>👔 Нанимай менеджеров для пассивного дохода</li>
+                        </ul>
+                    </div>
+
+                    <div class="rules-section">
+                        <div class="rules-title">🎮 Как играть</div>
+                        <ul class="rules-list">
+                            <li>
+                                👆 Тыкай на золотую кнопку "КИНОШЛЕП" для
+                                заработка
+                            </li>
+                            <li>
+                                ⚡ Покупай улучшения для увеличения дохода с
+                                клика
+                            </li>
+                            <li>
+                                👔 Нанимай менеджеров для автоматического
+                                заработка
+                            </li>
+                            <li>
+                                🎥 Снимай фильмы для получения прибыли (или
+                                убытков!)
+                            </li>
+                            <li>
+                                🎈 Лопай пузырьки чтобы получить промокоды со
+                                скидками
+                            </li>
+                            <li>💎 Копи бюджет и улучшай оборудование</li>
+                        </ul>
+                    </div>
+
+                    <div class="rules-section">
+                        <div class="rules-title">🎈 Пузырьки</div>
+                        <ul class="rules-list">
+                            <li>
+                                🎬 Пузырьки появляются при съемке 1, 3 и 5
+                                фильмов
+                            </li>
+                            <li>💥 Кликай по пузырькам чтобы их лопнуть</li>
+                            <li>🎁 Каждый лопнувший пузырь = скидка 1%</li>
+                            <li>📝 После каждой волны получай промокод</li>
+                            <li>
+                                ⏰ Пузырьки исчезают если долетят до верха
+                                экрана
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Buttons -->
+            <div class="bottom-buttons">
+                <a
+                    href="https://vk.com/center.kino.merch"
+                    target="_blank"
+                    class="bottom-button"
+                >
+                    <div class="bottom-button-icon">👕</div>
+                    <div class="bottom-button-text">МЕРЧ</div>
+                </a>
+                <a
+                    href="https://t.me/center_kino"
+                    target="_blank"
+                    class="bottom-button"
+                >
+                    <div class="bottom-button-icon">🌍</div>
+                    <div class="bottom-button-text">СЕТИ</div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Registration Modal -->
+        <div class="modal" id="registrationModal">
+            <div class="modal-content">
+                <div class="modal-title">🎬 Добро пожаловать!</div>
+                <div style="margin-bottom: 20px">
+                    Введите ваше имя чтобы начать игру
+                </div>
+                <input
+                    type="text"
+                    id="playerName"
+                    class="modal-input"
+                    placeholder="Введите ваше имя"
+                    maxlength="20"
+                />
+                <button class="modal-button" id="registerButton">ИГРАТЬ</button>
+            </div>
+        </div>
+
+        <!-- Rules Modal -->
+        <div class="modal" id="rulesModal">
+            <div class="modal-content">
+                <div class="modal-title">🎬 Добро пожаловать в КИНОШЛЕП!</div>
+                <div style="text-align: left; margin-bottom: 20px">
+                    <p>
+                        <strong>🎯 Цель:</strong> Накапливай бюджет и попади в
+                        топ игроков!
+                    </p>
+                    <br />
+                    <p><strong>🎮 Как играть:</strong></p>
+                    <ul>
+                        <li>• Кликай на кнопку для заработка</li>
+                        <li>• Покупай улучшения</li>
+                        <li>• Нанимай менеджеров</li>
+                        <li>• Снимай фильмы</li>
+                        <li>• Лопай пузырьки для промокодов</li>
+                    </ul>
+                </div>
+                <button class="modal-button" id="startGameButton">
+                    Начать игру!
+                </button>
+            </div>
+        </div>
+
+        <!-- Bubble Promo Modal -->
+        <div class="modal" id="bubblePromoModal">
+            <div class="modal-content">
+                <div class="modal-title">🎈 Поздравляем!</div>
+                <div id="promoModalText"></div>
+                <div style="margin: 20px 0">
+                    <div
+                        style="
+                            font-size: 24px;
+                            font-weight: 900;
+                            color: var(--gold-color);
+                        "
+                        id="promoModalCode"
+                    ></div>
+                </div>
+                <a
+                    href="https://vk.com/center.kino.merch"
+                    target="_blank"
+                    class="modal-button"
+                >
+                    Перейти в мерч
+                </a>
+                <button class="modal-button" id="continueGameButton">
+                    Продолжить игру
+                </button>
+            </div>
+        </div>
+
+        <!-- Film Result Modal -->
+        <div class="modal film-result-modal" id="filmResultModal">
+            <div class="modal-content">
+                <div class="modal-title">🎬 Результат съемки</div>
+                <div class="film-title" id="filmResultTitle">Название фильма</div>
+                <div class="film-budget" id="filmResultBudget">+000.000 Киношлепов</div>
+                <div class="film-explanation" id="filmResultExplanation">Объяснение результата</div>
+                <button class="modal-button" id="continueFilmButton">
+                    Продолжить игру
+                </button>
+            </div>
+        </div>
+
+        <script>
+            // Game State
+            let gameState = {
+                money: 0,
+                totalClicks: 0,
+                totalEarned: 0,
+                filmsCount: 0,
+                filmCost: 1000000,
+                baseClickPower: 1500,
+                bubbles_popped: [0, 0, 0], // Wave 1, 2, 3
+                current_promo: "",
+                name: "",
+                managers: {},
+            };
+
+            let bubblesActive = false;
+            let currentBubbleWave = 0;
+            let passiveIncomeInterval;
+
+            // Film Names
+            const FILM_NAMES = [
+                "Пираты Московского моря",
+                "Бегущий по тротуару 2025",
+                "Титаник 2: Электро-Богалу",
+                "Звездные войны: Месть сисадмина",
+                "Матрица: Перезагрузка Windows",
+                "Властелин WiFi",
+                "Гарри Поттер и Философский камень препотствий",
+                "Терминатор: Восстание принтеров",
+                "Индиана Джонс и потерянный пароль",
+            ];
+
+            // Film explanations for profit/loss
+            const PROFIT_EXPLANATIONS = [
+                "фильм вышел в прокат по всему миру!",
+                "фильм получил премию 'Оскар'!",
+                "фильм стал хитом на стриминговых платформах!",
+                "фильм собрал рекордную кассу в первые выходные!",
+                "фильм получил отличные отзывы критиков!",
+                "фильм стал культовым среди зрителей!",
+                "фильм продали в 50 стран!",
+                "фильм номинировали на 'Золотой глобус'!",
+                "фильм стал самым популярным в этом году!"
+            ];
+
+            const LOSS_EXPLANATIONS = [
+                "рекламная кампания провалилась!",
+                "фильм получил плохие отзывы!",
+                "главный актер попал в скандал!",
+                "конкуренты выпустили блокбастер в то же время!",
+                "техническая проблема на премьере!",
+                "цензура запретила показ в некоторых регионах!",
+                "пиратские копии появились раньше релиза!",
+                "неудачная дата выхода совпала с праздниками!",
+                "бюджет превысил ожидания из-за пересъемок!"
+            ];
+
+            // Upgrades Configuration
+            const UPGRADES = [
+                {
+                    id: "camera",
+                    name: "📹 Камера",
+                    basePrice: 15000,
+                    basePower: 400,
+                    level: 0,
+                    priceMultiplier: 1.35,
+                },
+                {
+                    id: "lighting",
+                    name: "💡 Освещение",
+                    basePrice: 35000,
+                    basePower: 800,
+                    level: 0,
+                    priceMultiplier: 1.4,
+                },
+                {
+                    id: "actors",
+                    name: "🎭 Актеры",
+                    basePrice: 120000,
+                    basePower: 2200,
+                    level: 0,
+                    priceMultiplier: 1.5,
+                },
+                {
+                    id: "script",
+                    name: "📝 Сценарий",
+                    basePrice: 80000,
+                    basePower: 1600,
+                    level: 0,
+                    priceMultiplier: 1.38,
+                },
+                {
+                    id: "lightingEquipment",
+                    name: "💡 Световое оборудование",
+                    basePrice: 200000,
+                    basePower: 3000,
+                    level: 0,
+                    priceMultiplier: 1.6,
+                },
+                {
+                    id: "advertising",
+                    name: "📢 Реклама",
+                    basePrice: 450000,
+                    basePower: 5500,
+                    level: 0,
+                    priceMultiplier: 1.7,
+                },
+            ];
+
+            // Managers Configuration
+            const MANAGERS = [
+                {
+                    id: "assistant",
+                    name: "🎬 Помощник режиссера",
+                    basePrice: 500000,
+                    baseIncome: 1000,
+                    level: 0,
+                    hired: false,
+                    priceMultiplier: 1.8,
+                },
+                {
+                    id: "producer",
+                    name: "🎯 Продюсер",
+                    basePrice: 2000000,
+                    baseIncome: 4000,
+                    level: 0,
+                    hired: false,
+                    priceMultiplier: 2.0,
+                },
+                {
+                    id: "distributor",
+                    name: "📦 Дистрибьютор",
+                    basePrice: 8000000,
+                    baseIncome: 15000,
+                    level: 0,
+                    hired: false,
+                    priceMultiplier: 2.2,
+                },
+                {
+                    id: "studio",
+                    name: "🏢 Студия",
+                    basePrice: 30000000,
+                    baseIncome: 50000,
+                    level: 0,
+                    hired: false,
+                    priceMultiplier: 2.5,
+                },
+            ];
+
+            // Leaderboard Data
+            let leaderboardData = [];
+
+            // Utility Functions
+            function formatNumber(num) {
+                if (num >= 1000000000) {
+                    return (num / 1000000000).toFixed(1) + " Млрд";
+                } else if (num >= 1000000) {
+                    return (num / 1000000).toFixed(1) + " М";
+                } else if (num >= 1000) {
+                    return (num / 1000).toFixed(1) + " К";
+                }
+                return Math.floor(num).toString();
+            }
+
+            function getUpgradePrice(upgrade) {
+                return Math.floor(
+                    upgrade.basePrice *
+                        Math.pow(upgrade.priceMultiplier, upgrade.level),
+                );
+            }
+
+            function getUpgradePower(upgrade) {
+                return upgrade.basePower * upgrade.level;
+            }
+
+            function getTotalUpgradePower() {
+                return UPGRADES.reduce(
+                    (total, upgrade) => total + getUpgradePower(upgrade),
+                    0,
+                );
+            }
+
+            function getCurrentClickPower() {
+                const basePower = gameState.baseClickPower;
+                const upgradePower = getTotalUpgradePower();
+                return basePower + upgradePower;
+            }
+
+            function getManagerPrice(manager) {
+                if (!manager.hired) {
+                    return manager.basePrice;
+                }
+                return Math.floor(
+                    manager.basePrice *
+                        Math.pow(manager.priceMultiplier, manager.level),
+                );
+            }
+
+            function getManagerIncome(manager) {
+                if (!manager.hired) return 0;
+                return Math.floor(
+                    manager.baseIncome * (1 + manager.level * 0.5),
+                );
+            }
+
+            function getTotalPassiveIncome() {
+                return MANAGERS.reduce(
+                    (total, manager) => total + getManagerIncome(manager),
+                    0,
+                );
+            }
+
+            function startPassiveIncome() {
+                if (passiveIncomeInterval) {
+                    clearInterval(passiveIncomeInterval);
+                }
+
+                const hasHiredManagers = MANAGERS.some(
+                    (manager) => manager.hired,
+                );
+                if (hasHiredManagers) {
+                    passiveIncomeInterval = setInterval(() => {
+                        const income = getTotalPassiveIncome();
+                        if (income > 0) {
+                            gameState.money += income;
+                            gameState.totalEarned += income;
+                            updateDisplay();
+                        }
+                    }, 1000);
+                }
+            }
+
+            // Leaderboard Functions
+            function generateInitialLeaderboard() {
+                const names = ["НАСТЯ", "ВЛАДИМИР", "ЛЕЙСАН", "ЛЮБОВЬ", "ПОЛИНА"];
+                const scores = [950000000, 780000000, 550000000, 320000000, 150000000]; // От 950М до 150М
+                
+                leaderboardData = [];
+                for (let i = 0; i < names.length; i++) {
+                    leaderboardData.push({
+                        name: names[i],
+                        score: scores[i],
+                        isRealPlayer: false
+                    });
+                }
+                
+                // Save to localStorage
+                localStorage.setItem('kinoshlep_leaderboard', JSON.stringify(leaderboardData));
+                localStorage.setItem('kinoshlep_leaderboard_updated', Date.now().toString());
+            }
+
+            function shouldUpdateLeaderboard() {
+                const lastUpdate = localStorage.getItem('kinoshlep_leaderboard_updated');
+                if (!lastUpdate) return true;
+                
+                const lastUpdateTime = new Date(parseInt(lastUpdate));
+                const now = new Date();
+                
+                // Check if it's past 12:00 today and we haven't updated today
+                const today12PM = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 12, 0, 0);
+                const lastUpdate12PM = new Date(lastUpdateTime.getFullYear(), lastUpdateTime.getMonth(), lastUpdateTime.getDate(), 12, 0, 0);
+                
+                return now >= today12PM && lastUpdate12PM < today12PM;
+            }
+
+            function updateLeaderboardIfNeeded() {
+                if (shouldUpdateLeaderboard()) {
+                    generateInitialLeaderboard();
+                    updateLeaderboardDisplay();
+                }
+            }
+
+            function addPlayerToLeaderboard() {
+                if (!gameState.name || gameState.money <= 0) return;
+                
+                // Load current leaderboard
+                const savedLeaderboard = localStorage.getItem('kinoshlep_leaderboard');
+                if (savedLeaderboard) {
+                    leaderboardData = JSON.parse(savedLeaderboard);
+                }
+                
+                // Check if player already exists
+                const existingPlayerIndex = leaderboardData.findIndex(entry => 
+                    entry.name === gameState.name && entry.isRealPlayer
+                );
+                
+                if (existingPlayerIndex !== -1) {
+                    // Update existing player if score is higher
+                    if (gameState.money > leaderboardData[existingPlayerIndex].score) {
+                        leaderboardData[existingPlayerIndex].score = gameState.money;
+                    }
+                } else {
+                    // Add new player
+                    leaderboardData.push({
+                        name: gameState.name,
+                        score: gameState.money,
+                        isRealPlayer: true
+                    });
+                }
+                
+                // Sort and keep only top 5
+                leaderboardData.sort((a, b) => b.score - a.score);
+                leaderboardData = leaderboardData.slice(0, 5);
+                
+                // Save updated leaderboard
+                localStorage.setItem('kinoshlep_leaderboard', JSON.stringify(leaderboardData));
+            }
+
+            function updateLeaderboardDisplay() {
+                const leaderboard = document.getElementById('leaderboard');
+                
+                if (!leaderboardData || leaderboardData.length === 0) {
+                    leaderboard.innerHTML = `
+                        <div style="text-align: center; padding: 20px; color: rgba(255, 255, 255, 0.6);">
+                            Нет данных рейтинга
+                        </div>
+                    `;
+                    return;
+                }
+                
+                let leaderboardHTML = '';
+                leaderboardData.forEach((entry, index) => {
+                    const rankClass = index === 0 ? 'first' : index === 1 ? 'second' : index === 2 ? 'third' : '';
+                    const isCurrentPlayer = entry.name === gameState.name && entry.isRealPlayer;
+                    
+                    leaderboardHTML += `
+                        <div class="leaderboard-item">
+                            <div class="leaderboard-rank ${rankClass}">${index + 1}</div>
+                            <div class="leaderboard-name" style="${isCurrentPlayer ? 'color: var(--gold-color); font-weight: 900;' : ''}">${entry.name}${isCurrentPlayer ? ' (Вы)' : ''}</div>
+                            <div class="leaderboard-score">${formatNumber(entry.score)}</div>
+                        </div>
+                    `;
+                });
+                
+                leaderboard.innerHTML = leaderboardHTML;
+            }
+
+            // Manager Functions
+            function buyManager(manager) {
+                const price = getManagerPrice(manager);
+                if (gameState.money < price) return;
+
+                gameState.money -= price;
+
+                if (!manager.hired) {
+                    manager.hired = true;
+                    manager.level = 1;
+                    startPassiveIncome();
+                } else {
+                    manager.level++;
+                }
+
+                updateDisplay();
+                updateManagers();
+                saveGameState();
+            }
+
+            // Bubble Functions
+            function shouldShowBubbles() {
+                if (bubblesActive) return false;
+
+                if (
+                    gameState.filmsCount === 1 &&
+                    gameState.bubbles_popped[0] === 0
+                ) {
+                    currentBubbleWave = 0;
+                    return true;
+                }
+                if (
+                    gameState.filmsCount === 3 &&
+                    gameState.bubbles_popped[1] === 0
+                ) {
+                    currentBubbleWave = 1;
+                    return true;
+                }
+                if (
+                    gameState.filmsCount === 5 &&
+                    gameState.bubbles_popped[2] === 0
+                ) {
+                    currentBubbleWave = 2;
+                    return true;
+                }
+                return false;
+            }
+
+            function createBubble() {
+                const bubble = document.createElement("div");
+                bubble.className = "bubble";
+                bubble.style.left =
+                    Math.random() * (window.innerWidth - 60) + "px";
+                bubble.style.bottom = "-60px";
+
+                // Add random horizontal movement
+                const randomX = (Math.random() - 0.5) * 100;
+                bubble.style.setProperty("--random-x", randomX + "px");
+
+                bubble.addEventListener("click", function () {
+                    popBubble(bubble);
+                });
+
+                document.body.appendChild(bubble);
+
+                // Remove bubble after animation
+                setTimeout(() => {
+                    if (bubble.parentNode) {
+                        bubble.remove();
+                    }
+                }, 12000);
+            }
+
+            function popBubble(bubble) {
+                if (bubble.classList.contains("bubble-pop")) return;
+
+                bubble.classList.add("bubble-pop");
+                gameState.bubbles_popped[currentBubbleWave]++;
+
+                // Show discount effect
+                showDiscountEffect(bubble);
+
+                setTimeout(() => {
+                    bubble.remove();
+                }, 300);
+
+                // Check if all bubbles are popped or if this is the last bubble
+                checkBubbleWaveComplete();
+            }
+
+            function showDiscountEffect(bubble) {
+                const effect = document.createElement("div");
+                effect.className = "discount-effect";
+                effect.textContent = "-1%";
+                effect.style.left = bubble.style.left;
+                effect.style.top = bubble.offsetTop + "px";
+
+                document.body.appendChild(effect);
+
+                setTimeout(() => {
+                    effect.remove();
+                }, 2000);
+            }
+
+            function startBubbleWave() {
+                bubblesActive = true;
+                let bubblesCreated = 0;
+                const maxBubbles = 5;
+
+                const bubbleInterval = setInterval(() => {
+                    if (bubblesCreated < maxBubbles) {
+                        createBubble();
+                        bubblesCreated++;
+                    } else {
+                        clearInterval(bubbleInterval);
+
+                        // Check if wave completed after 10 seconds
+                        setTimeout(() => {
+                            checkBubbleWaveComplete();
+                        }, 10000);
+                    }
+                }, 1000);
+            }
+
+            function checkBubbleWaveComplete() {
+                const poppedInCurrentWave =
+                    gameState.bubbles_popped[currentBubbleWave];
+                const allBubblesPopped = poppedInCurrentWave === 5;
+                const activeBubbles = document.querySelectorAll(
+                    ".bubble:not(.bubble-pop)",
+                ).length;
+
+                if (allBubblesPopped || activeBubbles === 0) {
+                    bubblesActive = false;
+                    showPromoModal();
+                }
+            }
+
+            function showPromoModal() {
+                const modal = document.getElementById("bubblePromoModal");
+                const textEl = document.getElementById("promoModalText");
+                const codeEl = document.getElementById("promoModalCode");
+
+                let totalPopped = 0;
+                let waveText = "";
+
+                if (currentBubbleWave === 0) {
+                    totalPopped = gameState.bubbles_popped[0];
+                    waveText = `Ты лопнул <span class="highlighted-text">${totalPopped}</span> пузырьков, получи промокод на скидку`;
+                } else if (currentBubbleWave === 1) {
+                    totalPopped =
+                        gameState.bubbles_popped[0] +
+                        gameState.bubbles_popped[1];
+                    waveText = `За два раза ты лопнул <span class="highlighted-text">${totalPopped}</span> пузырьков, получи промокод на скидку`;
+                } else if (currentBubbleWave === 2) {
+                    totalPopped =
+                        gameState.bubbles_popped[0] +
+                        gameState.bubbles_popped[1] +
+                        gameState.bubbles_popped[2];
+                    waveText = `За все разы ты лопнул <span class="highlighted-text">${totalPopped}</span> пузырьков, получи промокод на скидку`;
+                }
+
+                const promoCode = `CENTERCLIK${totalPopped}`;
+                gameState.current_promo = promoCode;
+
+                textEl.innerHTML = waveText;
+                codeEl.textContent = promoCode;
+
+                modal.classList.add("show");
+                updatePromoDisplay();
+                saveGameState();
+            }
+
+            // Film Result Modal Functions
+            function showFilmResultModal(filmName, profit, explanation) {
+                const modal = document.getElementById("filmResultModal");
+                const titleEl = document.getElementById("filmResultTitle");
+                const budgetEl = document.getElementById("filmResultBudget");
+                const explanationEl = document.getElementById("filmResultExplanation");
+                
+                titleEl.textContent = filmName;
+                
+                if (profit > 0) {
+                    budgetEl.textContent = `+${formatNumber(profit)} Киношлепов`;
+                    budgetEl.className = "film-budget profit";
+                    explanationEl.textContent = `Вы получили +${formatNumber(profit)} Киношлепов - ${explanation}`;
+                } else {
+                    budgetEl.textContent = `${formatNumber(profit)} Киношлепов`;
+                    budgetEl.className = "film-budget loss";
+                    explanationEl.textContent = `Вы потеряли ${formatNumber(Math.abs(profit))} Киношлепов - ${explanation}`;
+                }
+                
+                modal.classList.add("show");
+            }
+
+            // Update Functions
+            function updateDisplay() {
+                document.getElementById("moneyDisplay").textContent =
+                    `Бюджет: ${formatNumber(gameState.money)}`;
+                document.getElementById("filmCost").textContent =
+                    `Стоимость: ${formatNumber(gameState.filmCost)}`;
+                document.getElementById("filmButton").disabled =
+                    gameState.money < gameState.filmCost;
+
+                // Update passive income display
+                const passiveDisplay = document.getElementById(
+                    "passiveIncomeDisplay",
+                );
+                const totalPassiveIncome = getTotalPassiveIncome();
+                if (totalPassiveIncome > 0) {
+                    passiveDisplay.textContent = `Пассивный доход: +${formatNumber(totalPassiveIncome)}/сек`;
+                    passiveDisplay.style.display = "block";
+                } else {
+                    passiveDisplay.style.display = "none";
+                }
+
+                // Update stats
+                document.getElementById("clickPowerStat").textContent =
+                    formatNumber(getCurrentClickPower());
+                document.getElementById("filmsCountStat").textContent =
+                    gameState.filmsCount;
+                document.getElementById("totalClicksStat").textContent =
+                    gameState.totalClicks;
+                document.getElementById("totalEarnedStat").textContent =
+                    formatNumber(gameState.totalEarned);
+
+                // Update leaderboard with current player
+                addPlayerToLeaderboard();
+                updateLeaderboardDisplay();
+            }
+
+            function updateUpgrades() {
+                const grid = document.getElementById("upgradesGrid");
+                grid.innerHTML = "";
+
+                UPGRADES.forEach((upgrade) => {
+                    const price = getUpgradePrice(upgrade);
+                    const power = upgrade.basePower;
+                    const canAfford = gameState.money >= price;
+
+                    const upgradeEl = document.createElement("div");
+                    upgradeEl.className = `upgrade-card ${canAfford ? "" : "disabled"}`;
+                    upgradeEl.innerHTML = `
+                    <div class="upgrade-name">${upgrade.name}</div>
+                    <div class="upgrade-level">Уровень: ${upgrade.level}</div>
+                    <div class="upgrade-price">${formatNumber(price)}</div>
+                    <div class="upgrade-effect">+${formatNumber(power)} за клик</div>
+                `;
+
+                    if (canAfford) {
+                        upgradeEl.addEventListener("click", () =>
+                            buyUpgrade(upgrade),
+                        );
+                    }
+
+                    grid.appendChild(upgradeEl);
+                });
+            }
+
+            function updateManagers() {
+                const grid = document.getElementById("managersGrid");
+                grid.innerHTML = "";
+
+                MANAGERS.forEach((manager) => {
+                    const price = getManagerPrice(manager);
+                    const income = manager.hired
+                        ? getManagerIncome(manager)
+                        : manager.baseIncome;
+                    const canAfford = gameState.money >= price;
+
+                    const managerEl = document.createElement("div");
+                    managerEl.className = `manager-card ${canAfford ? "" : "disabled"}`;
+
+                    let statusText = manager.hired
+                        ? `Уровень: ${manager.level}`
+                        : "Не нанят";
+                    let buttonText = manager.hired ? "Улучшить" : "Нанять";
+
+                    managerEl.innerHTML = `
+                    <div class="manager-name">${manager.name}</div>
+                    <div class="manager-level">${statusText}</div>
+                    <div class="manager-price">${formatNumber(price)}</div>
+                    <div class="manager-effect">+${formatNumber(income)}/сек</div>
+                `;
+
+                    if (canAfford) {
+                        managerEl.addEventListener("click", () =>
+                            buyManager(manager),
+                        );
+                    }
+
+                    grid.appendChild(managerEl);
+                });
+            }
+
+            function updatePromoDisplay() {
+                const promoSection = document.getElementById("promoSection");
+                const promoCode = document.getElementById("promoCode");
+
+                if (gameState.current_promo) {
+                    promoSection.style.display = "block";
+                    promoCode.textContent = gameState.current_promo;
+                } else {
+                    promoSection.style.display = "none";
+                }
+            }
+
+            function updateFilmography() {
+                const filmography = document.getElementById("filmography");
+                const savedFilms = JSON.parse(
+                    localStorage.getItem("playerFilms") || "[]",
+                );
+
+                if (savedFilms.length === 0) {
+                    filmography.innerHTML = `
+                    <div style="text-align: center; color: rgba(255,255,255,0.6); padding: 20px;">
+                        Пока не снято ни одного фильма
+                    </div>
+                `;
+                    return;
+                }
+
+                let filmsList = "";
+                savedFilms
+                    .slice(-10)
+                    .reverse()
+                    .forEach((film) => {
+                        const resultClass = film.profit > 0 ? "profit" : "loss";
+                        const resultText =
+                            film.profit > 0
+                                ? `+${formatNumber(film.profit)}`
+                                : `${formatNumber(film.profit)}`;
+
+                        filmsList += `
+                    <div class="film-item">
+                        <div class="film-name">${film.name}</div>
+                        <div class="film-result ${resultClass}">${resultText}</div>
+                    </div>
+                `;
+                    });
+
+                filmography.innerHTML = filmsList;
+            }
+
+            function updateCountdown() {
+                const now = new Date();
+                const currentMonth = now.getMonth();
+                const currentYear = now.getFullYear();
+
+                // Next 10th at 12:00 Moscow time
+                let nextDraw = new Date(
+                    currentYear,
+                    currentMonth,
+                    10,
+                    12,
+                    0,
+                    0,
+                );
+
+                // If we passed this month's 10th, go to next month
+                if (now > nextDraw) {
+                    nextDraw = new Date(
+                        currentYear,
+                        currentMonth + 1,
+                        10,
+                        12,
+                        0,
+                        0,
+                    );
+                }
+
+                const timeDiff = nextDraw - now;
+
+                if (timeDiff > 0) {
+                    const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor(
+                        (timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+                    );
+                    const minutes = Math.floor(
+                        (timeDiff % (1000 * 60 * 60)) / (1000 * 60),
+                    );
+
+                    document.getElementById("countdownDisplay").textContent =
+                        `${days} дней ${hours} часов ${minutes} минут`;
+                } else {
+                    document.getElementById("countdownDisplay").textContent =
+                        "Розыгрыш идёт!";
+                }
+            }
+
+            // Game Actions
+            function handleClick() {
+                const clickPower = getCurrentClickPower();
+                gameState.money += clickPower;
+                gameState.totalClicks++;
+                gameState.totalEarned += clickPower;
+
+                showClickEffect(clickPower);
+                updateDisplay();
+                updateUpgrades();
+                updateManagers();
+                saveGameState();
+            }
+
+            function showClickEffect(amount) {
+                const button = document.getElementById("clickButton");
+                const effect = document.createElement("div");
+                effect.className = "click-effect";
+                effect.textContent = `+${formatNumber(amount)}`;
+
+                // Random position around button
+                const rect = button.getBoundingClientRect();
+                effect.style.left =
+                    rect.left +
+                    rect.width / 2 +
+                    (Math.random() - 0.5) * 100 +
+                    "px";
+                effect.style.top =
+                    rect.top +
+                    rect.height / 2 +
+                    (Math.random() - 0.5) * 100 +
+                    "px";
+                effect.style.position = "fixed";
+
+                document.body.appendChild(effect);
+
+                setTimeout(() => {
+                    effect.remove();
+                }, 1000);
+            }
+
+            function makeFilm() {
+                if (gameState.money < gameState.filmCost) return;
+
+                const currentFilmCost = gameState.filmCost;
+                gameState.money -= currentFilmCost;
+                gameState.filmsCount++;
+
+                // Random film outcome (-60% to +80%)
+                const outcomePercent = Math.random() * 140 - 60;
+                const profit = Math.floor(
+                    currentFilmCost * (outcomePercent / 100),
+                );
+                gameState.money += profit;
+
+                // Choose film name and explanation
+                const filmName = FILM_NAMES[Math.floor(Math.random() * FILM_NAMES.length)];
+                let explanation;
+                
+                if (profit > 0) {
+                    explanation = PROFIT_EXPLANATIONS[Math.floor(Math.random() * PROFIT_EXPLANATIONS.length)];
+                } else {
+                    explanation = LOSS_EXPLANATIONS[Math.floor(Math.random() * LOSS_EXPLANATIONS.length)];
+                }
+
+                // Save film result
+                const savedFilms = JSON.parse(
+                    localStorage.getItem("playerFilms") || "[]",
+                );
+                savedFilms.push({
+                    name: filmName,
+                    profit: profit,
+                    cost: currentFilmCost,
+                });
+                localStorage.setItem("playerFilms", JSON.stringify(savedFilms));
+
+                // Show film result modal
+                showFilmResultModal(filmName, profit, explanation);
+
+                // Exponential cost increase
+                let multiplier = 2.2 + gameState.filmsCount * 0.15;
+                if (gameState.filmsCount > 5) multiplier += 0.5;
+                if (gameState.filmsCount > 10) multiplier += 0.8;
+                if (gameState.filmsCount > 15) multiplier += 1.2;
+
+                gameState.filmCost = Math.floor(
+                    gameState.filmCost * multiplier,
+                );
+
+                // Check for bubbles
+                if (shouldShowBubbles()) {
+                    setTimeout(() => startBubbleWave(), 2000); // Delay to show film result first
+                }
+
+                updateDisplay();
+                updateFilmography();
+                updateManagers();
+                saveGameState();
+            }
+
+            function buyUpgrade(upgrade) {
+                const price = getUpgradePrice(upgrade);
+                if (gameState.money < price) return;
+
+                gameState.money -= price;
+                upgrade.level++;
+
+                updateDisplay();
+                updateUpgrades();
+                updateManagers();
+                saveGameState();
+            }
+
+            // Tab System
+            function initTabs() {
+                const tabs = document.querySelectorAll(".tab");
+                const tabContents = document.querySelectorAll(".tab-content");
+
+                tabs.forEach((tab) => {
+                    tab.addEventListener("click", () => {
+                        const targetTab = tab.dataset.tab;
+
+                        tabs.forEach((t) => t.classList.remove("active"));
+                        tabContents.forEach((tc) =>
+                            tc.classList.remove("active"),
+                        );
+
+                        tab.classList.add("active");
+                        document
+                            .getElementById(targetTab + "Tab")
+                            .classList.add("active");
+
+                        // Update managers when tab is opened
+                        if (targetTab === "managers") {
+                            updateManagers();
+                        }
+                        // Update leaderboard when tab is opened
+                        if (targetTab === "leaderboard") {
+                            updateLeaderboardIfNeeded();
+                            updateLeaderboardDisplay();
+                        }
+                    });
+                });
+            }
+
+            // Save/Load System (localStorage)
+            function saveGameState() {
+                const saveData = {
+                    ...gameState,
+                    upgrades: UPGRADES.reduce((obj, upgrade) => {
+                        obj[upgrade.id] = upgrade.level;
+                        return obj;
+                    }, {}),
+                    managers: MANAGERS.reduce((obj, manager) => {
+                        obj[manager.id] = {
+                            level: manager.level,
+                            hired: manager.hired,
+                        };
+                        return obj;
+                    }, {}),
+                };
+                localStorage.setItem(
+                    "kinoshlep_save",
+                    JSON.stringify(saveData),
+                );
+            }
+
+            function loadGameState() {
+                const saved = localStorage.getItem("kinoshlep_save");
+                if (saved) {
+                    try {
+                        const saveData = JSON.parse(saved);
+                        gameState.money = saveData.money || 0;
+                        gameState.totalClicks = saveData.totalClicks || 0;
+                        gameState.totalEarned = saveData.totalEarned || 0;
+                        gameState.filmsCount = saveData.filmsCount || 0;
+                        gameState.filmCost = saveData.filmCost || 1000000;
+                        gameState.bubbles_popped = saveData.bubbles_popped || [
+                            0, 0, 0,
+                        ];
+                        gameState.current_promo = saveData.current_promo || "";
+                        gameState.name = saveData.name || "";
+
+                        // Load upgrades
+                        if (saveData.upgrades) {
+                            UPGRADES.forEach((upgrade) => {
+                                upgrade.level =
+                                    saveData.upgrades[upgrade.id] || 0;
+                            });
+                        }
+
+                        // Load managers
+                        if (saveData.managers) {
+                            MANAGERS.forEach((manager) => {
+                                const managerData =
+                                    saveData.managers[manager.id];
+                                if (managerData) {
+                                    manager.level = managerData.level || 0;
+                                    manager.hired = managerData.hired || false;
+                                }
+                            });
+                        }
+
+                        // Start passive income if any managers are hired
+                        if (MANAGERS.some((manager) => manager.hired)) {
+                            startPassiveIncome();
+                        }
+                    } catch (e) {
+                        console.error("Error loading save:", e);
+                    }
+                }
+            }
+
+            // Registration Functions
+            function showRegistrationModal() {
+                document
+                    .getElementById("registrationModal")
+                    .classList.add("show");
+            }
+
+            function hideRegistrationModal() {
+                document
+                    .getElementById("registrationModal")
+                    .classList.remove("show");
+            }
+
+            function showRulesModal() {
+                document.getElementById("rulesModal").classList.add("show");
+            }
+
+            function hideRulesModal() {
+                document.getElementById("rulesModal").classList.remove("show");
+            }
+
+            function registerPlayer() {
+                const name = document.getElementById("playerName").value.trim();
+
+                if (!name) {
+                    alert("Пожалуйста, введите ваше имя");
+                    return;
+                }
+
+                gameState.name = name;
+                hideRegistrationModal();
+                showRulesModal();
+                saveGameState();
+            }
+
+            // Initialize Game
+            function initGame() {
+                // Initialize leaderboard
+                const savedLeaderboard = localStorage.getItem('kinoshlep_leaderboard');
+                if (savedLeaderboard) {
+                    leaderboardData = JSON.parse(savedLeaderboard);
+                } else {
+                    generateInitialLeaderboard();
+                }
+
+                // Check if player is registered
+                const saved = localStorage.getItem("kinoshlep_save");
+                if (saved) {
+                    try {
+                        const saveData = JSON.parse(saved);
+                        if (saveData.name) {
+                            gameState.name = saveData.name;
+                            loadGameState();
+                            updateDisplay();
+                            updateUpgrades();
+                            updateManagers();
+                            updateFilmography();
+                            updatePromoDisplay();
+                            updateLeaderboardDisplay();
+                        } else {
+                            showRegistrationModal();
+                        }
+                    } catch (e) {
+                        showRegistrationModal();
+                    }
+                } else {
+                    showRegistrationModal();
+                }
+
+                initTabs();
+
+                // Event listeners
+                document
+                    .getElementById("clickButton")
+                    .addEventListener("click", handleClick);
+                document
+                    .getElementById("filmButton")
+                    .addEventListener("click", makeFilm);
+                document
+                    .getElementById("registerButton")
+                    .addEventListener("click", registerPlayer);
+                document
+                    .getElementById("startGameButton")
+                    .addEventListener("click", hideRulesModal);
+                document
+                    .getElementById("continueGameButton")
+                    .addEventListener("click", () => {
+                        document
+                            .getElementById("bubblePromoModal")
+                            .classList.remove("show");
+                    });
+                document
+                    .getElementById("continueFilmButton")
+                    .addEventListener("click", () => {
+                        document
+                            .getElementById("filmResultModal")
+                            .classList.remove("show");
+                    });
+
+                // Update countdown every minute
+                updateCountdown();
+                setInterval(updateCountdown, 60000);
+
+                // Check leaderboard update every hour
+                setInterval(updateLeaderboardIfNeeded, 3600000);
+
+                // Auto-save every 10 seconds
+                setInterval(saveGameState, 10000);
+            }
+
+            // Start the game when page loads
+            document.addEventListener("DOMContentLoaded", initGame);
+        </script>
+    </body>
+</html>

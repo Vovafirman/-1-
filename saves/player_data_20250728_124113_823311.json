@@ -1,0 +1,63 @@
+{
+  "money": 4,
+  "totalEarned": 4,
+  "totalClicks": 4,
+  "passiveIncome": 0,
+  "clickPower": 1,
+  "bubblesPopped": 0,
+  "discountApplied": 0,
+  "filmsMade": 0,
+  "playTime": 630,
+  "lastSaveTime": "2025-07-28T12:51:45.180154",
+  "upgrades": {
+    "actor": {
+      "cost": 500,
+      "level": 0
+    },
+    "automation": {
+      "cost": 5000000,
+      "level": 0
+    },
+    "budget": {
+      "cost": 100,
+      "level": 0
+    },
+    "director": {
+      "cost": 2000,
+      "level": 0
+    },
+    "distribution": {
+      "cost": 200000,
+      "level": 0
+    },
+    "marketing": {
+      "cost": 50000,
+      "level": 0
+    },
+    "multiplier": {
+      "cost": 1000000,
+      "level": 0
+    },
+    "studio": {
+      "cost": 10000,
+      "level": 0
+    }
+  },
+  "achievements": {
+    "firstBillion": false,
+    "firstBubble": false,
+    "firstClick": true,
+    "firstFilm": false,
+    "firstMillion": false,
+    "firstUpgrade": false,
+    "hundredBubbles": false,
+    "hundredClicks": false,
+    "hundredFilms": false,
+    "passivePlayer": false,
+    "speedClicker": false,
+    "tenFilms": false,
+    "tenUpgrades": false,
+    "thousandClicks": false,
+    "tycoon": false
+  }
+}

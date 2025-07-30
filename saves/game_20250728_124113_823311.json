@@ -1,0 +1,43 @@
+{
+  "money": 0,
+  "totalClicks": 0,
+  "totalEarned": 0,
+  "filmsCount": 0,
+  "filmCost": 1000000,
+  "baseClickPower": 1500,
+  "bubbles_popped": [
+    0,
+    0,
+    0
+  ],
+  "current_promo": "",
+  "name": "вфыввы",
+  "managers": {
+    "assistant": {
+      "level": 0,
+      "hired": false
+    },
+    "producer": {
+      "level": 0,
+      "hired": false
+    },
+    "distributor": {
+      "level": 0,
+      "hired": false
+    },
+    "studio": {
+      "level": 0,
+      "hired": false
+    }
+  },
+  "filmography": [],
+  "achievements": [],
+  "upgrades": {
+    "camera": 0,
+    "lighting": 0,
+    "actors": 0,
+    "script": 0,
+    "lightingEquipment": 0,
+    "advertising": 0
+  }
+}

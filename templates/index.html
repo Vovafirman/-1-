@@ -1,0 +1,541 @@
+<!doctype html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, user-scalable=no"
+        />
+        <title>Киношлеп Кликер - Империя Кино</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <div class="title">🎬 КИНОШЛЕП</div>
+                <div class="money-display" id="moneyDisplay">Бюджет: 0</div>
+                <div
+                    class="passive-income-display"
+                    id="passiveIncomeDisplay"
+                    style="display: none"
+                >
+                    Пассивный доход: +0 К/сек
+                </div>
+            </div>
+
+            <button class="click-button" id="clickButton">КИНОШЛЕП</button>
+
+            <!-- Desktop Tabs -->
+            <div class="tabs">
+                <div class="tab active" data-tab="game">
+                    <div class="tab-icon">🎮</div>
+                    <div class="tab-text">Игра</div>
+                </div>
+                <div class="tab" data-tab="upgrades">
+                    <div class="tab-icon">⚡</div>
+                    <div class="tab-text">Улучшения</div>
+                </div>
+                <div class="tab" data-tab="managers">
+                    <div class="tab-icon">👔</div>
+                    <div class="tab-text">Менеджеры</div>
+                </div>
+                <div class="tab" data-tab="stats">
+                    <div class="tab-icon">📊</div>
+                    <div class="tab-text">Статистика</div>
+                </div>
+                <div class="tab" data-tab="achievements">
+                    <div class="tab-icon">🏆</div>
+                    <div class="tab-text">Достижения</div>
+                </div>
+                <div class="tab" data-tab="leaderboard">
+                    <div class="tab-icon">👑</div>
+                    <div class="tab-text">Рейтинг</div>
+                </div>
+                <div class="tab" data-tab="filmography">
+                    <div class="tab-icon">🎥</div>
+                    <div class="tab-text">Фильмография</div>
+                </div>
+                <div class="tab" data-tab="giveaway">
+                    <div class="tab-icon">🎁</div>
+                    <div class="tab-text">Ежемесечный розыгрыш</div>
+                </div>
+                <div class="tab" data-tab="rules">
+                    <div class="tab-icon">📖</div>
+                    <div class="tab-text">Правила</div>
+                </div>
+            </div>
+
+            <!-- Game Tab -->
+            <div class="tab-content active" id="gameTab">
+                <div class="section film-section">
+                    <div class="section-title">🎬 Производство фильмов</div>
+                    <button class="film-button" id="filmButton">
+                        Снять фильм
+                    </button>
+                    <div class="film-cost" id="filmCost">
+                        Стоимость: 1 000 000 К
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upgrades Tab -->
+            <div class="tab-content" id="upgradesTab">
+                <div class="section">
+                    <div class="section-title">⚡ Улучшения оборудования</div>
+                    <div class="upgrades-grid" id="upgradesGrid"></div>
+                </div>
+            </div>
+
+            <!-- Managers Tab -->
+            <div class="tab-content" id="managersTab">
+                <div class="section">
+                    <div class="section-title">👔 Менеджеры</div>
+                    <div class="managers-grid" id="managersGrid"></div>
+                </div>
+            </div>
+
+            <!-- Achievements Tab -->
+            <div class="tab-content" id="achievementsTab">
+                <div class="section">
+                    <div class="section-title">🏆 Достижения</div>
+                    <div class="achievements-grid" id="achievementsGrid"></div>
+                </div>
+            </div>
+
+            <!-- Stats Tab -->
+            <div class="tab-content" id="statsTab">
+                <div class="section">
+                    <div class="section-title">📊 Статистика</div>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value" id="clickPowerStat">
+                                1500
+                            </div>
+                            <div class="stat-label">За клик</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="filmsCountStat">0</div>
+                            <div class="stat-label">Фильмов снято</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="totalClicksStat">0</div>
+                            <div class="stat-label">Всего кликов</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="totalEarnedStat">
+                                0 К
+                            </div>
+                            <div class="stat-label">Всего заработано</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="promo-section"
+                    id="promoSection"
+                    style="display: none"
+                >
+                    <div class="promo-title">🎁 Твой промокод</div>
+                    <div class="promo-code" id="promoCode">
+                        Пока нет промокода
+                    </div>
+                </div>
+            </div>
+
+            <!-- Leaderboard Tab -->
+            <div class="tab-content" id="leaderboardTab">
+                <div class="section">
+                    <div class="section-title">🏆 Топ 5 игроков</div>
+                    <div class="leaderboard" id="leaderboard">
+                        <div
+                            style="
+                                text-align: center;
+                                padding: 20px;
+                                color: rgba(255, 255, 255, 0.6);
+                            "
+                        >
+                            Загрузка рейтинга...
+                        </div>
+                    </div>
+                    <div style="text-align: center; margin-top: 15px; font-size: clamp(10px, 2.5vw, 12px); color: rgba(255, 255, 255, 0.6);">
+                        Обновляется каждый день в 12:00
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filmography Tab -->
+            <div class="tab-content" id="filmographyTab">
+                <div class="section">
+                    <div class="section-title">🎥 Фильмография</div>
+                    <div class="filmography" id="filmography">
+                        <div
+                            style="
+                                text-align: center;
+                                color: rgba(255, 255, 255, 0.6);
+                                padding: 20px;
+                            "
+                        >
+                            Пока не снято ни одного фильма
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Giveaway Tab -->
+            <div class="tab-content" id="giveawayTab">
+                <div class="section">
+                    <div class="section-title">🎁 Ежемесечный розыгрыш</div>
+                    <div class="countdown-timer">
+                        <div class="timer-label">До следующего розыгрыша:</div>
+                        <div class="countdown-display" id="countdownDisplay">
+                        Загрузка...
+                    </div>
+                    </div>
+                    <div class="subscribe-text">
+                        Чтобы участвовать подпишись
+                    </div>
+                        <div style="text-align: center; margin-top: 20px;">
+                            <a
+                                href="https://t.me/center_kino"
+                                target="_blank"
+                                class="modal-button subscribe-button"
+                            >
+                                Подписаться на канал
+                            </a>
+                        </div>
+                </div>
+            </div>
+
+            <!-- Rules Tab -->
+            <div class="tab-content" id="rulesTab">
+                <div class="section">
+                    <div class="section-title">📖 Правила игры</div>
+                    <div class="rules-section">
+                        <div class="rules-title">🎯 Цель игры</div>
+                        <ul class="rules-list">
+                            <li>
+                                💰 Накапливай бюджет, чтобы попасть в топ
+                                игроков
+                            </li>
+                            <li>
+                                🎬 Создавай киноимперию и становись
+                                кинотерминатором
+                            </li>
+                            <li>
+                                🏆 Соревнуйся с другими игроками за лидерство
+                            </li>
+                            <li>🎈 Лопай пузырьки для получения промокодов</li>
+                            <li>👔 Нанимай менеджеров для пассивного дохода</li>
+                        </ul>
+                    </div>
+
+                    <div class="rules-section">
+                        <div class="rules-title">🎮 Как играть</div>
+                        <ul class="rules-list">
+                            <li>
+                                👆 Тыкай на золотую кнопку "КИНОШЛЕП" для
+                                заработка
+                            </li>
+                            <li>
+                                ⚡ Покупай улучшения для увеличения дохода с
+                                клика
+                            </li>
+                            <li>
+                                👔 Нанимай менеджеров для автоматического
+                                заработка
+                            </li>
+                            <li>
+                                🎥 Снимай фильмы для получения прибыли (или
+                                убытков!)
+                            </li>
+                            <li>
+                                🎈 Лопай пузырьки чтобы получить промокоды со
+                                скидками
+                            </li>
+                            <li>💎 Копи бюджет и улучшай оборудование</li>
+                        </ul>
+                    </div>
+
+                    <div class="rules-section">
+                        <div class="rules-title">🎈 Пузырьки</div>
+                        <ul class="rules-list">
+                            <li>
+                                🎬 Пузырьки появляются при съемке 1, 3 и 5
+                                фильмов
+                            </li>
+                            <li>💥 Кликай по пузырькам чтобы их лопнуть</li>
+                            <li>🎁 Каждый лопнувший пузырь = скидка 1%</li>
+                            <li>📝 После каждой волны получай промокод</li>
+                            <li>
+                                ⏰ Пузырьки исчезают если долетят до верха
+                                экрана
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Buttons -->
+            <div class="bottom-buttons">
+                <a
+                    href="https://vk.com/center.kino.merch"
+                    target="_blank"
+                    class="bottom-button"
+                >
+                    <div class="bottom-button-icon">👕</div>
+                    <div class="bottom-button-text">МЕРЧ</div>
+                </a>
+                <a
+                    href="https://t.me/center_kino"
+                    target="_blank"
+                    class="bottom-button"
+                >
+                    <div class="bottom-button-icon">🌍</div>
+                    <div class="bottom-button-text">СЕТИ</div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Registration Modal -->
+        <div class="modal show" id="registrationModal">
+            <div class="modal-content">
+                <div class="modal-title">🎬 Добро пожаловать в Киношлеп!</div>
+
+                <!-- Login Form -->
+                <div id="loginForm">
+                    <div style="margin-bottom: 20px">
+                        Войдите в свой аккаунт для сохранения прогресса
+                    </div>
+                    <input
+                        type="text"
+                        id="loginName"
+                        class="modal-input"
+                        placeholder="Никнейм"
+                        maxlength="20"
+                    />
+                    <input
+                        type="password"
+                        id="loginPassword"
+                        class="modal-input"
+                        placeholder="Пароль"
+                        maxlength="50"
+                    />
+                    <div id="loginError" style="color: #ff4757; margin-bottom: 10px; display: none;"></div>
+                    <button class="modal-button" id="loginButton">ВОЙТИ</button>
+                    <button class="modal-button-secondary" id="showRegisterButton">РЕГИСТРАЦИЯ</button>
+                </div>
+
+                <!-- Registration Form -->
+                <div id="registerForm" style="display: none;">
+                    <div style="margin-bottom: 20px">
+                        Создайте новый аккаунт для участия в рейтинге
+                    </div>
+                    <input
+                        type="text"
+                        id="playerName"
+                        class="modal-input"
+                        placeholder="Никнейм (минимум 3 символа)"
+                        maxlength="20"
+                    />
+                    <input
+                        type="password"
+                        id="playerPassword"
+                        class="modal-input"
+                        placeholder="Пароль (минимум 4 символа)"
+                        maxlength="50"
+                    />
+                    <div id="nameError" style="color: #ff4757; margin-bottom: 10px; display: none;"></div>
+                    <button class="modal-button" id="registerButton">СОЗДАТЬ АККАУНТ</button>
+                    <button class="modal-button-secondary" id="showLoginButton">ВХОД</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rules Modal -->
+        <div class="modal" id="rulesModal">
+            <div class="modal-content">
+                <div class="modal-title">🎬 Добро пожаловать в КИНОШЛЕП!</div>
+                <div style="text-align: left; margin-bottom: 20px">
+                    <p>
+                        <strong>🎯 Цель:</strong> Накапливай бюджет и попади в
+                        топ игроков!
+                    </p>
+                    <br />
+                    <p><strong>🎮 Как играть:</strong></p>
+                    <ul>
+                        <li>• Кликай на кнопку для заработка</li>
+                        <li>• Покупай улучшения</li>
+                        <li>• Нанимай менеджеров</li>
+                        <li>• Снимай фильмы</li>
+                        <li>• Лопай пузырьки для промокодов</li>
+                    </ul>
+                </div>
+                <button class="modal-button" id="startGameButton">
+                    Начать игру!
+                </button>
+            </div>
+        </div>
+
+        <!-- Bubble Promo Modal -->
+        <div class="modal" id="bubblePromoModal">
+            <div class="modal-content">
+                <div class="modal-title">🎈 Поздравляем!</div>
+                <div id="promoModalText"></div>
+                <div style="margin: 20px 0">
+                    <div
+                        style="
+                            font-size: 24px;
+                            font-weight: 900;
+                            color: var(--gold-color);
+                        "
+                        id="promoModalCode"
+                    ></div>
+                </div>
+                <a
+                    href="https://vk.com/center.kino.merch"
+                    target="_blank"
+                    class="modal-button"
+                >
+                    Перейти в мерч
+                </a>
+                <button class="modal-button" id="continueGameButton">
+                    Продолжить игру
+                </button>
+            </div>
+        </div>
+
+        <!-- Film Result Modal -->
+        <div class="modal film-result-modal" id="filmResultModal">
+            <div class="modal-content">
+                <div class="modal-title">🎬 Результат съемки</div>
+                <div class="film-title" id="filmResultTitle">Название фильма</div>
+                <div class="film-budget" id="filmResultBudget">+000.000 Киношлепов</div>
+                <div class="film-explanation" id="filmResultExplanation">Объяснение результата</div>
+                <button class="modal-button" id="continueFilmButton">
+                    Продолжить игру
+                </button>
+            </div>
+        </div>
+
+        <script src="{{ url_for('static', filename='js/game.js') }}"></script>
+
+            </div>
+
+            <!-- Settings Tab -->
+            <div class="tab-content" id="settings">
+                <div class="section">
+                    <h2 class="section-title">⚙️ Настройки</h2>
+                    <div class="settings-grid">
+                        <div class="setting-item">
+                            <div class="setting-name">Автосохранение</div>
+                            <label class="toggle">
+                                <input type="checkbox" id="autoSave" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="setting-item">
+                            <div class="setting-name">Звуковые эффекты</div>
+                            <label class="toggle">
+                                <input type="checkbox" id="soundEffects" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="setting-item">
+                            <div class="setting-name">Анимации</div>
+                            <label class="toggle">
+                                <input type="checkbox" id="animations" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="setting-item">
+                            <div class="setting-name">Показывать пузыри</div>
+                            <label class="toggle">
+                                <input type="checkbox" id="showBubbles" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="settings-buttons">
+                        <button class="settings-button save-btn" onclick="saveGame()">
+                            💾 Сохранить Игру
+                        </button>
+                        <button class="settings-button reset-btn" onclick="resetGame()">
+                            🔄 Сбросить Игру
+                        </button>
+                        <button class="settings-button export-btn" onclick="exportSave()">
+                            📤 Экспорт Сохранения
+                        </button>
+                        <button class="settings-button import-btn" onclick="importSave()">
+                            📥 Импорт Сохранения
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Tab -->
+            <div class="tab-content" id="stats">
+                <div class="section">
+                    <h2 class="section-title">📊 Статистика</h2>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-icon">💰</div>
+                            <div class="stat-name">Всего заработано</div>
+                            <div class="stat-value" id="totalEarnedStat">0 ₽</div>
+                        </div>
+
+                        <div class="stat-item">
+                            <div class="stat-icon">👆</div>
+                            <div class="stat-name">Всего кликов</div>
+                            <div class="stat-value" id="totalClicksStat">0</div>
+                        </div>
+
+                        <div class="stat-item">
+                            <div class="stat-icon">📈</div>
+                            <div class="stat-name">Пассивный доход</div>
+                            <div class="stat-value" id="passiveIncomeStat">0 ₽/сек</div>
+                        </div>
+
+                        <div class="stat-item">
+                            <div class="stat-icon">⚡</div>
+                            <div class="stat-name">Сила клика</div>
+                            <div class="stat-value" id="clickPowerStat">1 ₽</div>
+                        </div>
+
+                        <div class="stat-item">
+                            <div class="stat-icon">💫</div>
+                            <div class="stat-name">Пузырей лопнуто</div>
+                            <div class="stat-value" id="bubblesPoppedStat">0</div>
+                        </div>
+
+                        <div class="stat-item">
+                            <div class="stat-icon">🎬</div>
+                            <div class="stat-name">Фильмов снято</div>
+                            <div class="stat-value" id="filmsMadeStat">0</div>
+                        </div>
+
+                        <div class="stat-item">
+                            <div class="stat-icon">⏰</div>
+                            <div class="stat-name">Время игры</div>
+                            <div class="stat-value" id="playTimeStat">0 мин</div>
+                        </div>
+
+                        <div class="stat-item">
+                            <div class="stat-icon">🏆</div>
+                            <div class="stat-name">Достижений получено</div>
+                            <div class="stat-value" id="achievementsStat">0/15</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="{{ url_for('static', filename='js/game.js') }}"></script>
+        <script>
+            // Game data will be loaded via API
+        </script>
+    </body>
+</html>
